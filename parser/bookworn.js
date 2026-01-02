@@ -1,52 +1,106 @@
 
-export class Scanner{
+export class Scanner {
 
-  static const keywords = ["table", "int", "string", "primary", "increment", "null", "not_null", "to"]
-  static const symbols = [ "{", "}", "(", ")", ";"]
-  static const letters = /([aA-zZ])/;
-  static const numbers = /([0-9])/
+  static keywords = ["table", "int", "string", "primary", "increment", "null", "not_null", "to"]
+  static symbols = ["{", "}", "(", ")", ";"]
+  static letters = /([aA-zZ])/;
+  static numbers = /([0-9])/
 
-  static processCode(rawCode){
+  static processCode(rawCode) {
 
-      let iterator = 0
-      let swap = null
+    let iterator = 0
+    let swap = null
+    let char = null
+    let tokenList = []
+    let state = 0
 
-      while(iterator < rawCode.lenght) {
-        char = rawCode[iterator]
+    while (iterator < rawCode.length) {
 
-        if(char === "{") return { type: "LBRACE", lexeme: char }
-        if(char === "}" return {type: "RBRACE", lexeme: char }
-        if(char === "(" return {type: "LPARENTHESES", lexeme: char }
-        if(char === ")" return {type: "RPARENTHESES", lexeme: char }
-        if(char === ";" return {type: "SEMICOLON", lexeme: char }
+      char = rawCode[iterator]
 
-        if(letters.test(char){
-          swap += char
-          iterador ++
-          break
-        }
+      switch (state) {
 
-        if(numbers.test(char){
+        case 0:
+          if (char === "{") {
+            tokenList.push({ type: "LBRACE", lexeme: char })
+            iterator++
+            state = 0
+          }
+          if (char === "}") {
+            tokenList.push({ type: "RBRACE", lexeme: char })
+            iterator++
+            state = 0
+          }
+          if (char === "(") {
+            tokenList.push({ type: "LPARENTHESES", lexeme: char })
+            iterator++
+            state = 0
+          }
+          if (char === ")") {
+            tokenList.push({ type: "RPARENTHESES", lexeme: char })
+            iterator++
+            state = 0
+          }
+          if (char === ";") {
+            tokenList.push({ type: "SEMICOLON", lexeme: char })
+            iterator++
+            state = 0
+          }
+
+          if (letters.test(char)) {
             swap += char
-            iterador ++
-            break
-        }
+            iterador++
+            state = 1
+          }
 
-        if(swap !== null){
-            if(keywords.includes(swap)){
-              return {type: swap.toUppercase(), lexeme: swap}
-            }
+          if (numbers.test(char)) {
+            swap += char
+            iterador++
+            state = 2
+          }
 
-            if(letters.test(swap)){
-              return {type: "IDENT", lexeme: swap}
-            }
+          iterator++
 
-            if(numbers.test(swap)){
-              return {type: "NUM", lexeme: swap}
+          break
+
+        case 1:
+          if (letters.test(char)) {
+            swap +=
+              iterador++
+          }
+          else {
+            if (keywords.includes(swap)) {
+              tokenList.push({ type: swap.toUpperCase(), lexeme: swap })
+              swap = null
+              state = 0
             }
-        }
-        
+            else {
+              tokenList.push({ type: "IDENT", lexeme: swap })
+              swap = null
+              state = 0
+            }
+          }
+          break
+
+        case 2:
+          if (numbers.test(char)) {
+            swap += char
+            iterador++
+          }
+          else {
+            tokenList.push({ type: "NUM", lexeme: swap })
+            swap = null
+            state = 0
+          }
+          break
       }
+
+    }
+
+    tokenList.push({type: "EOF", lexeme: null})
+
+    return tokenList
+
   }
-  
+
 }
