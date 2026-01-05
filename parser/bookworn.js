@@ -67,38 +67,46 @@ export class Scanner {
           break
 
         case 1:
-          if (letters.test(char)) {
-              swap += char
-              iterator++
-          }
-          if(!letters.test(rawCode[iterator])){
-            if (keywords.includes(swap)) {
-              tokenList.push({ type: swap.toUpperCase(), lexeme: swap })
-              swap = ""
-              state = 0
-            }
-            else {
-              tokenList.push({ type: "IDENT", lexeme: swap })
-              swap = ""
-              state = 0
-            }
-          }
-          break
-
-        case 2:
-          if (numbers.test(char)) {
+          if (letters.test(char) || numbers.test(char)) {
             swap += char
             iterator++
-          }
-          if(!this.number.test(char)){
-            tokenList.push({ type: "NUM", lexeme: swap })
+          } else {
+            tokenList.push({
+              type: keywords.includes(swap) ? swap.toUpperCase() : "IDENT",
+              lexeme: swap
+            })
             swap = ""
             state = 0
           }
           break
+        
+        case 2:
+          if (numbers.test(char)) {
+            swap += char
+            iterator++
+          } else {
+            tokenList.push({ type: "NUM", lexeme: swap })
+            swap = ""
+            state = 0
+            // NO iterator++
+          }
+          break
+
       }
 
     }
+
+    if (swap.length > 0) {
+      if (state === 1) {
+        tokenList.push({
+          type: keywords.includes(swap) ? swap.toUpperCase() : "IDENT",
+          lexeme: swap
+        })
+      } else if (state === 2) {
+        tokenList.push({ type: "NUM", lexeme: swap })
+      }
+    }
+
 
     tokenList.push({type: "EOF", lexeme: null})
 
