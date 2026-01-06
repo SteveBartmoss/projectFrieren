@@ -9,7 +9,7 @@ column_decl -> IDENT type column_size? column_modifier* ";"
 column_size -> "(" NUM ")"
 column_modifier -> "increment" | "null" | "not_null" | "primary"
 type -> "int" | "string"
-relation_decl -> IDENT "(" IDENT ")" "to" IDENT "(" IDENT ")" ";"
+relation_decl -> "relation" IDENT "(" IDENT ")" "to" IDENT "(" IDENT ")" ";"
 ```
 
 ### AST
