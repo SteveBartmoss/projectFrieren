@@ -1,62 +1,23 @@
 
 
 export class Parser{
-    
-    static stackTree = []
 
-
-    static pushToken(token){
-        this.stackTree.push(token)
+    constructor(tokens){
+        this.tokens = tokens
+        this.position = 0
     }
 
-    static popToken(){
-        this.stackTree.pop()
+    static peek(){
+        return this.tokens[this.position]
     }
 
-    static processCode(){
-
-        let itarator = 0
-        let state = 0
-        let pointer = ""
-
-        while(itarator < this.stackTree.length){
-
-            pointer = this.stackTree[iterator]
-
-            switch(state){
-
-                case 0: 
-                    if(pointer=== "program"){
-                        this.popToken()
-                        this.pushToken("table_decl")
-                        state = 1
-                        itarator++
-                    }
-                break
-
-                case 1: 
-                    if(pointer === "table_decla"){
-                        this.popToken()
-                        state = 2
-                        itarator++
-                    }
-                break
-
-                case 2:
-                    if(pointer === "table"){
-                        this.popToken()
-                        state = 3
-                        itarator++
-                    }
-                    else {
-                        throw new Error("Expected 'table' keyword recibed ->",pointer)
-                    }
-                break
-
-            }
-
+    static consume(expected){
+        const heap = this.peek()
+        if(heap === expected){
+            this.position++
+            return heap
         }
+        throw new Error(`Expected ${expected} got ${token.type}`)
     }
-    
 
 }
