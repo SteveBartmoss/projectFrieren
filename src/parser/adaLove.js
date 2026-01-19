@@ -73,6 +73,26 @@ export class Parser{
         throw new Error("Expected column or relation")
     }
 
-    
+    static parseColumnDecl(){
+
+        const name = this.consume("IDENT").lexeme
+        const type = this.parseType()
+        const size = this.parseColumnSize()
+
+        const modifiers = []
+        while(this.isModifier(this.peek().type)){
+            modifiers.push(this.consume(this.peek().type).type)
+        }
+    }
+
+    this.consume("SEMICOLON")
+
+    return {
+        kind: "Column",
+        name,
+        type,
+        size,
+        modifiers,
+    }
 
 }
