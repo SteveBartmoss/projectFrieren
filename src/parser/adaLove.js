@@ -83,16 +83,16 @@ export class Parser{
         while(this.isModifier(this.peek().type)){
             modifiers.push(this.consume(this.peek().type).type)
         }
+
+        this.consume("SEMICOLON")
+
+        return {
+            kind: "Column",
+            name,
+            type,
+            size,
+            modifiers,
+        }
     }
-
-    this.consume("SEMICOLON")
-
-    return {
-        kind: "Column",
-        name,
-        type,
-        size,
-        modifiers,
-    }
-
+    
 }
