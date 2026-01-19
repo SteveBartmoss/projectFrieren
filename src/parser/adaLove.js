@@ -58,7 +58,21 @@ export class Parser{
             columns,
             relations
         }
-        
+
     }
+
+    static parseTableItem(){
+        if(this.peek().type === "IDENT"){
+            return this.parseColumnDecl()
+        }
+
+        if(this.peek().type === "RELATION"){
+            return this.parseRelationDecl()
+        }
+
+        throw new Error("Expected column or relation")
+    }
+
+    
 
 }
