@@ -126,5 +126,32 @@ export class Parser{
         }
         throw new Error("Expected type")
     }
-    
+
+
+    static parseRelationDecl(){
+
+        this.consume("RELATION")
+
+        const name = this.consume("IDENT").lexeme
+
+        this.consume("LPARENTHESES")
+        const localColumn = this.consume("IDENT").lexeme
+        this.consume("RPARENTHESES")
+
+        this.consume("TO")
+
+        this.consume("LPARENTHESES")
+        const targetColumn = this.consume("IDENT").lexeme
+        this.consume("RPARENTHESES")
+
+        this.consume("SEMICOLON")
+
+        return {
+            kind: "relation",
+            name,
+            localColumn,
+            targetTable,
+            targetColumn,
+        }
+    }
 }
