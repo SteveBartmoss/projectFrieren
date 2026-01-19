@@ -20,4 +20,45 @@ export class Parser{
         throw new Error(`Expected ${expected} got ${token.type}`)
     }
 
+    static parseProgram(){
+
+        const tables = []
+
+        while(this.peek().type === "TABLE"){
+            tables.push(this.parseTableDecl())
+        }
+
+        this.consume("EOF")
+        return {type: "Program", tables}
+    }
+
+    static parseTableDecl(){
+        this.consume("TABLE")
+        
+        const name = this.consume("IDENT").lexeme
+
+        this.consume("LBRACE")
+
+        const columns = []
+        const relations = []
+
+        while(this.peek().type === "IDENT" || this.peek().type === "RELATION"){
+            const item = this.parseTableItem()
+            if(item.kind === "column") columns.push(item)
+            else relation.push(item)
+        }
+
+        this.consume("RBRACE")
+        this.consume("SEMICOLON")
+
+
+        return {
+            kind: "Table",
+            name,
+            columns,
+            relations
+        }
+        
+    }
+
 }
