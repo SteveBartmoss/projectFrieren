@@ -105,4 +105,26 @@ export class Parser{
         }
         return null 
     }
+
+    static isModifier(type){
+        return [
+            "INCREMENT",
+            "NULL",
+            "NOT_NULL",
+            "PRIMARY"
+        ].includes(type)
+    }
+
+    static parseType(){
+        if(this.peek().type === "INT"){
+            this.consume("INT")
+            return "int"
+        }
+        if(this.peek().type === "STRING"){
+            this.consume("STRING")
+            return "string"
+        }
+        throw new Error("Expected type")
+    }
+    
 }
