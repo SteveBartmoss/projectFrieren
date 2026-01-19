@@ -94,5 +94,15 @@ export class Parser{
             modifiers,
         }
     }
-    
+
+
+    static parseColumnSize(){
+        if(this.peek().type === "LPARENTHESES"){
+            this.consume("LPARENTHESES")
+            const size = Number(this.consume("NUM").lexeme)
+            this.consume("RPARENTHESES")
+            return size
+        }
+        return null 
+    }
 }
